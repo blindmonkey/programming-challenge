@@ -91,7 +91,8 @@ export class CheckerController {
             // complexity of that algorithm would be O(N) where N would be the
             // number of moves made.
             let positionKey = nx + "/" + ny;
-            if (this.visited[positionKey]) {
+            if (this.visited[positionKey] &&
+                    Object.keys(this.visited).length > 1) {
                 this.detectedCycle = true;
             }
             this.visited[positionKey] = true;
