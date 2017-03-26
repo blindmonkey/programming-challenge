@@ -86,3 +86,34 @@ Use whatever libraries you want from the npm public repository. You can find the
 Included is a minimal setup for [Pixi.js](https://github.com/pixijs/pixi.js), a 2D scene graph library that's GPU accelerated. If you've ever programmed ActionScript, it should look *very* familiar. The documentation can be found [here](https://pixijs.github.io/docs/index.html). Please use Pixi.js for all visualizations, UI, and interactions.
 
 To debug the application goto `View -> Toggle DevTools`. This will bring up the DevTools debugger. This is the standard DevTools that comes with Chrome.
+
+
+## Solution Usage Guide
+
+First, build and run the application as described above. Within the application:
+
+- use the "Start"/"Stop" buttons to pause and unpause the animation and movement
+logic
+- use the "Reset" button to reset both the arrow directions and the checker
+position
+- use the "Shuffle Arrows" button to rotate the arrows without moving the
+checker
+- use the "Switch to Constant Memory"/"Switch to Hash Map" button to control
+which algorithm should be used for edge/cycle detection
+- use the "Change Board Size" to change the board size to the new size specified
+in the text input fields to the left of the button
+- click the arrows in order to rotate them clockwise; however, only arrows that
+have stopped rotating may be clicked.
+
+Note: rotating any arrows and clicking any of the buttons (except for the
+"Start" and "Stop" buttons) will reset the algorithm state, making it behave as
+if the checker was just dropped onto the board. This is necessary because all
+these actions change the board state, thereby invalidating any state relevant to
+the algorithm.
+
+### Limitations
+Most of the limitations are centered around the fact that no accessibility hints
+are used, and keyboard interactivity (e.g. switching focus via tab, pressing
+enter to apply the value, etc) are not supported. Additionally, for the text
+input fields, it is only possible to control the cursor via the left/right arrow
+keys and not via the mouse; nor is it possible to select text.
