@@ -14,5 +14,5 @@
  */
 export type ArrowSquareType = {
     angle: number,
-    velocity: number
+    velocity: number,
 };

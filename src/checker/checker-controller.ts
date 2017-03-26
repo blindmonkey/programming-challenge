@@ -1,9 +1,8 @@
-import { ArrowSquareType } from '../arrows/arrows';
-import { Board } from '../board/board';
-import { Checker } from './checker';
+import { ArrowSquareType } from "../arrows/arrows";
+import { Board } from "../board/board";
+import { Checker } from "./checker";
 
-import { Audio, Sounds } from '../util/audio';
-
+import { Audio, Sounds } from "../util/audio";
 
 /**
  * A class that controls the movement of the `Checker`. Essentially, this is the
@@ -76,7 +75,7 @@ export class CheckerController {
             // all visited locations and compare against that. The memory
             // complexity of that algorithm would be O(N) where N would be the
             // number of moves made.
-            let positionKey = nx + '/' + ny;
+            let positionKey = nx + "/" + ny;
             if (this.visited[positionKey]) {
                 this.detectedCycle = true;
             }
@@ -158,8 +157,8 @@ export class CheckerController {
             if (angle < 0) angle += 4;
             let movements = [{x: 1}, {y: 1}, {x: -1}, {y: -1}];
             let movement = movements[angle];
-            return {dx: movement['x'] || 0,
-                    dy: movement['y'] || 0};
+            return {dx: movement["x"] || 0,
+                    dy: movement["y"] || 0};
         }
         return null;
     }

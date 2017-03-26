@@ -1,6 +1,6 @@
 /// <reference path="../typings/index.d.ts" />
 
-import { World } from './world';
+import { World } from "./world";
 
 // Create the world
 let world = new World();

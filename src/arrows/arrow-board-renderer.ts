@@ -1,7 +1,6 @@
-import { ArrowSquareType } from '../arrows/arrows';
-import { BoardRenderer, UpdatableRenderable } from '../board/board-renderer';
-import { Board } from '../board/board';
-
+import { ArrowSquareType } from "../arrows/arrows";
+import { Board } from "../board/board";
+import { BoardRenderer, UpdatableRenderable } from "../board/board-renderer";
 
 /**
  * Represents a renderer for an `ArrowBoard`. The only real benefit here is that
@@ -57,25 +56,25 @@ export class ArrowBoardRenderer extends BoardRenderer<ArrowSquareType> {
             let graphics = new PIXI.Graphics();
             container.addChild(graphics);
             graphics.beginFill(0xFF0000);
-            graphics.moveTo(-arrowSize/2, -arrowWidth/2);
-            graphics.lineTo(arrowStemLengthFromMid, -arrowWidth/2);
-            graphics.lineTo(arrowStemLengthFromMid, -arrowTipWidth/2);
-            graphics.lineTo(arrowSize/2, 0);
-            graphics.lineTo(arrowStemLengthFromMid, arrowTipWidth/2);
-            graphics.lineTo(arrowStemLengthFromMid, arrowWidth/2);
-            graphics.lineTo(-arrowSize/2, arrowWidth/2)
+            graphics.moveTo(-arrowSize / 2, -arrowWidth / 2);
+            graphics.lineTo(arrowStemLengthFromMid, -arrowWidth / 2);
+            graphics.lineTo(arrowStemLengthFromMid, -arrowTipWidth / 2);
+            graphics.lineTo(arrowSize / 2, 0);
+            graphics.lineTo(arrowStemLengthFromMid, arrowTipWidth / 2);
+            graphics.lineTo(arrowStemLengthFromMid, arrowWidth / 2);
+            graphics.lineTo(-arrowSize / 2, arrowWidth / 2);
             graphics.position.x = size / 2;
             graphics.position.y = size / 2;
             // The only control anyone has over the arrows from the model is
             // their rotation amount, so we allow updating that part.
             update = (square: ArrowSquareType) => (
-                graphics.rotation = Math.PI / 2 * square.angle)
+                graphics.rotation = Math.PI / 2 * square.angle);
             // Do the initial rotation assignment to match current square data.
             update(square);
         }
         return {
-            container: container,
-            update: update || (() => null)
+            container,
+            update: update || (() => null),
         };
     }
 }

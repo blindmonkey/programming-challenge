@@ -1,5 +1,4 @@
-import { PIXIRect } from '../shapes/pixi-rect';
-
+import { PIXIRect } from "../shapes/pixi-rect";
 
 /**
  * The options that are accepted by PIXITextInput to describe its appearance.
@@ -12,10 +11,9 @@ type PIXITextInputStyle = {
     // The style of the text outline.
     border?: {
         width?: number,
-        color?: number
-    }
+        color?: number,
+    },
 };
-
 
 /**
  * A (very) simple text input field with rudimentary focus support.
@@ -76,12 +74,12 @@ export class PIXITextInput extends PIXI.Container {
 
         // Initialize the graphic objects.
         this.outline = new PIXIRect(width, height, {
-            cornerRadius: cornerRadius, fillColor: backgroundColor,
+            cornerRadius, fillColor: backgroundColor,
             strokeColor: style && style.border && style.border.color || 0,
             lineWidth: style && style.border && style.border.width || 0});
         this.addChild(this.outline);
 
-        this.measureTextObject = new PIXI.Text('', style.text);
+        this.measureTextObject = new PIXI.Text("", style.text);
         this.textObject = new PIXI.Text(this.text, style.text);
         this.textObject.position.x = this.padding;
         this.textObject.position.y = this.padding;
@@ -94,21 +92,21 @@ export class PIXITextInput extends PIXI.Container {
 
         // Initialize the interactivity logic.
         this.interactive = true;
-        this.on('pointerdown', function() {
+        this.on("pointerdown", function() {
             // Focus on this text input.
             this.focused = true;
             this.cursorObject.alpha = 1;
-            this.emit('focus');
+            this.emit("focus");
         }.bind(this));
 
-        this.on('unfocus', function() {
+        this.on("unfocus", function() {
             // If something emits an unfocus event on this text input, it should
             // react.
             this.focused = false;
             this.cursorObject.alpha = 0;
         });
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener("keydown", function(e) {
             // Ignore keys when not focused.
             if (!this.focused) return;
             this.handleKeyDown(e.keyCode);
@@ -170,7 +168,7 @@ export class PIXITextInput extends PIXI.Container {
         this.measureTextObject.text = text;
         return {
             width: this.measureTextObject.width,
-            height: this.measureTextObject.height
+            height: this.measureTextObject.height,
         };
     }
 

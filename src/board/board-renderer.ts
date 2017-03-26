@@ -1,17 +1,15 @@
-import { Board } from './board';
-import { PIXIRect } from '../renderable/shapes/pixi-rect';
+import { PIXIRect } from "../renderable/shapes/pixi-rect";
+import { Board } from "./board";
 
-import { CoordUtils } from '../util/coord-utils';
-
+import { CoordUtils } from "../util/coord-utils";
 
 /**
  * A renderable that can be updated from a model of type T.
  */
 export type UpdatableRenderable<T> = {
     container: PIXI.Container,
-    update: (T) => void
-}
-
+    update: (T) => void,
+};
 
 /**
  * An abstract class that mostly knows how to render `Board`s. It's expected
@@ -20,12 +18,12 @@ export type UpdatableRenderable<T> = {
 export abstract class BoardRenderer<T> {
     private board: Board<T>;
     private squareSize: number;
-    private clickHandlers: ((x: number, y: number) => void)[];
+    private clickHandlers: Array<(x: number, y: number) => void>;
     // If a board has been rendered, this property contains the top-level
     // container of that rendering.
     private rendered: PIXI.Container;
     // An array of rendered children, which can be updated on demand.
-    private renderedChildren: UpdatableRenderable<T>[];
+    private renderedChildren: Array<UpdatableRenderable<T>>;
 
     constructor(board: Board<T>) {
         this.board = board;
@@ -82,14 +80,14 @@ export abstract class BoardRenderer<T> {
             }
             // Register for click events.
             squareContainer.interactive = true;
-            squareContainer.on('pointerdown', () => {
+            squareContainer.on("pointerdown", () => {
                 for (let i = 0; i < this.clickHandlers.length; i++) {
                     this.clickHandlers[i](x, y);
                 }
             });
             cached = {
                 container: squareContainer,
-                update: update
+                update,
             };
         } else {
             // If rendered square already exists, update it.

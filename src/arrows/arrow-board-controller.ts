@@ -1,6 +1,6 @@
-import { ArrowSquareType } from './arrows';
-import { BoardRenderer } from '../board/board-renderer';
-import { Board } from '../board/board';
+import { Board } from "../board/board";
+import { BoardRenderer } from "../board/board-renderer";
+import { ArrowSquareType } from "./arrows";
 
 /**
  * A board controller that knows about `Board`s with arrows. Allows us to rotate
@@ -44,7 +44,7 @@ export class ArrowBoardController {
                 value.angle += value.velocity;
                 // Correct the angle to be between [0, 4).
                 if (value.angle < 0) value.angle += 4;
-                if (value.angle >= 4) value.angle -=4;
+                if (value.angle >= 4) value.angle -= 4;
                 // Dampen the velocity to achieve a slowdown effect.
                 value.velocity *= 0.99;
                 // Floats are hard, so we need some threshold at which we'll
@@ -69,7 +69,7 @@ export class ArrowBoardController {
                     // to a discrete angle, give it a small kick in a random
                     // direction.
                     if (absVelocity < almostStoppedVelocity / 10) {
-                        value.velocity += Math.random() * 0.2 - 0.1
+                        value.velocity += Math.random() * 0.2 - 0.1;
                     }
                     spinning = true;
                 }

@@ -8,8 +8,8 @@ export class CoordUtils {
      */
     static coordToIndex(x: number, y: number, width: number, height: number,
                         shouldClamp: boolean = true) {
-        x = x|0;
-        y = y|0;
+        x = x | 0;
+        y = y | 0;
         if (shouldClamp) {
             x = clamp(x, 0, width - 1);
             y = clamp(y, 0, height - 1);
@@ -24,10 +24,10 @@ export class CoordUtils {
      * function is the inverse of coordToIndex.
      */
     static indexToCoord(index: number, width: number) {
-        index = index|0;
-        width = width|0;
+        index = index | 0;
+        width = width | 0;
         let x = index % width;
         let y = (index - x) / width;
-        return {x: x, y: y};
+        return {x, y};
     }
 }

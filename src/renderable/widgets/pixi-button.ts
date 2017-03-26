@@ -1,6 +1,5 @@
-import { PIXIRect } from '../shapes/pixi-rect';
-import { ButtonStateHandler } from './button-state-handler';
-
+import { PIXIRect } from "../shapes/pixi-rect";
+import { ButtonStateHandler } from "./button-state-handler";
 
 /**
  * Represents the styling information that can be passed to a PIXIButton.
@@ -12,16 +11,15 @@ export type PIXIButtonStyle = {
         colors?: {
             down?: number,
             hovered?: number,
-            normal?: number
-        }
+            normal?: number,
+        },
     },
     colors?: {
         down?: number,
         hovered?: number,
-        normal?: number
-    }
+        normal?: number,
+    },
 };
-
 
 let accessOrDefault = function(
         obj: Object, path: string[], defaultValue?: any) {
@@ -32,14 +30,13 @@ let accessOrDefault = function(
     return obj;
 };
 
-
 /**
  * A button component that can be added to a scene and will fire an event when
  * clicked.
  */
 export class PIXIButton extends PIXI.Container {
     private label: string;
-    private clickHandlers: (() => void)[];
+    private clickHandlers: Array<() => void>;
     private padding: number;
 
     private text: PIXI.Text;
@@ -62,21 +59,21 @@ export class PIXIButton extends PIXI.Container {
         this.clickHandlers = [];
 
         let downFillColor = accessOrDefault(
-            style, ['colors', 'down'], 0x00AA00);
+            style, ["colors", "down"], 0x00AA00);
         let normalFillColor = accessOrDefault(
-            style, ['colors', 'normal'], 0x00FF00);
+            style, ["colors", "normal"], 0x00FF00);
         let hoverFillColor = accessOrDefault(
-            style, ['colors', 'hovered'], 0x66FF66);
+            style, ["colors", "hovered"], 0x66FF66);
 
         let downBorderColor = accessOrDefault(
-            style, ['border', 'colors', 'down'], downFillColor);
+            style, ["border", "colors", "down"], downFillColor);
         let normalBorderColor = accessOrDefault(
-            style, ['border', 'colors', 'normal'], normalFillColor);
+            style, ["border", "colors", "normal"], normalFillColor);
         let hoverBorderColor = accessOrDefault(
-            style, ['border', 'colors', 'hovered'], hoverFillColor);
+            style, ["border", "colors", "hovered"], hoverFillColor);
 
         this.outline = new PIXIRect(width, height, {
-            cornerRadius: cornerRadius, fillColor: normalFillColor,
+            cornerRadius, fillColor: normalFillColor,
             strokeColor: normalBorderColor,
             lineWidth: style && style.border && style.border.width || 0});
         this.addChild(this.outline);
@@ -121,7 +118,7 @@ export class PIXIButton extends PIXI.Container {
      * button.
      */
     onClick(handler: () => void): PIXIButton {
-        this.on('click', handler);
+        this.on("click", handler);
         return this;
     }
 }

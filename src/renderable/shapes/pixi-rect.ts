@@ -11,7 +11,7 @@ type PIXIRectRenderingParameters = {
     // The stroke color as a number.
     strokeColor: number,
     // The line width of the outline, or 0.
-    lineWidth: number
+    lineWidth: number,
 };
 
 /**
@@ -31,8 +31,8 @@ export class PIXIRect extends PIXI.Graphics {
             fillColor: options && options.fillColor || 0,
             strokeColor: options && options.strokeColor,
             lineWidth: options && options.lineWidth || 0,
-            width: width,
-            height: height
+            width,
+            height,
         };
         this.updateGeometry();
     }

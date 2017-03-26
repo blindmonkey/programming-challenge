@@ -3,7 +3,6 @@ type PIXIStackOptions = {
     separation?: number,
 };
 
-
 /**
  * A simple class that keeps the common options between the vertical and
  * horizontal stacks. Currently, two options are supported:
@@ -20,7 +19,6 @@ class PIXIStack extends PIXI.Container {
         this.separation = options && options.separation || 0;
     }
 }
-
 
 /**
  * A horizontal stack that lays out its children when they are added. It is
@@ -42,7 +40,6 @@ export class PIXIHStack extends PIXIStack {
         child.position.y = this.padding;
     }
 }
-
 
 /**
  * A vertical stack that lays out its children when they are added. It is

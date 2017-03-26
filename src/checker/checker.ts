@@ -12,8 +12,8 @@ export class Checker {
     private offset: {x: number, y: number};
 
     constructor(x: number, y: number) {
-        this.x = x|0;
-        this.y = y|0;
+        this.x = x | 0;
+        this.y = y | 0;
         this.offset = {x: 0, y: 0};
     }
 
@@ -22,8 +22,8 @@ export class Checker {
 
     /** Sets the position of this `Checker` on a `Board`. */
     setPosition(x: number, y: number) {
-        this.x = x|0;
-        this.y = y|0;
+        this.x = x | 0;
+        this.y = y | 0;
         return this;
     }
 

@@ -1,5 +1,4 @@
-import { Checker } from './checker';
-
+import { Checker } from "./checker";
 
 /**
  * A class that is capable of rendering a checker on its board. It is expected
@@ -49,7 +48,7 @@ export class CheckerRenderer {
         for (let ring = 1; ring < rings; ring++) {
             g.beginFill(colors[ring % colors.length]);
             g.drawCircle(halfSquareSize, halfSquareSize,
-                         (radius - innerRing) * (rings - ring)/rings + innerRing);
+                         (radius - innerRing) * (rings - ring) / rings + innerRing);
         }
         return g;
     }

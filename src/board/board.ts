@@ -1,4 +1,4 @@
-import { CoordUtils } from '../util/coord-utils';
+import { CoordUtils } from "../util/coord-utils";
 
 export type BoardSquareInitializer<T> = (x: number, y: number) => T;
 

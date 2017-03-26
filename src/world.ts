@@ -1,21 +1,20 @@
-import PIXI = require('pixi.js');
+import PIXI = require("pixi.js");
 
-import { ArrowSquareType } from './arrows/arrows';
-import { ArrowBoardRenderer } from './arrows/arrow-board-renderer';
-import { ArrowBoardController } from './arrows/arrow-board-controller';
-import { Board, BoardSquareInitializer } from './board/board';
-import { Checker } from './checker/checker';
-import { CheckerController } from './checker/checker-controller';
-import { CheckerRenderer } from './checker/checker-renderer';
+import { ArrowBoardController } from "./arrows/arrow-board-controller";
+import { ArrowBoardRenderer } from "./arrows/arrow-board-renderer";
+import { ArrowSquareType } from "./arrows/arrows";
+import { Board, BoardSquareInitializer } from "./board/board";
+import { Checker } from "./checker/checker";
+import { CheckerController } from "./checker/checker-controller";
+import { CheckerRenderer } from "./checker/checker-renderer";
 
 // Custom PIXI controls/styling
-import { ButtonStyles } from './renderable/widgets/button-style';
-import { PIXIButton } from './renderable/widgets/pixi-button';
-import { PIXITextInput } from './renderable/widgets/pixi-text-input';
-import { PIXIHStack, PIXIVStack } from './renderable/widgets/pixi-stack';
+import { ButtonStyles } from "./renderable/widgets/button-style";
+import { PIXIButton } from "./renderable/widgets/pixi-button";
+import { PIXIHStack, PIXIVStack } from "./renderable/widgets/pixi-stack";
+import { PIXITextInput } from "./renderable/widgets/pixi-text-input";
 
-import { Audio, Sounds } from './util/audio';
-
+import { Audio, Sounds } from "./util/audio";
 
 /**
  * Represents the world, or the app. This class has top-level control over all
@@ -68,7 +67,7 @@ export class World {
 
         this.createNewBoard();
 
-        window.addEventListener('resize', () => this.handleWindowResize(
+        window.addEventListener("resize", () => this.handleWindowResize(
             window.innerWidth, window.innerHeight));
         this.handleWindowResize(window.innerWidth, window.innerHeight);
     }
@@ -82,7 +81,7 @@ export class World {
         let velocitySign = velocityBase >= 0 ? 1 : -1;
         return {
             angle: Math.floor(Math.random() * 4),
-            velocity: velocityBase + velocitySign * 0.2
+            velocity: velocityBase + velocitySign * 0.2,
         };
     };
 
@@ -102,8 +101,8 @@ export class World {
      * button that would switch to the opposite/next mode.
      */
     private getAlgorithmButtonLabel() {
-        let toConstantTimeLabel = 'Switch to Constant Memory';
-        let toHashMapLabel = 'Switch to HashMap';
+        let toConstantTimeLabel = "Switch to Constant Memory";
+        let toHashMapLabel = "Switch to HashMap";
         return (this.useConstMemoryAlgorithm ?
                 toHashMapLabel : toConstantTimeLabel);
     }
@@ -125,27 +124,27 @@ export class World {
         let buttonWidth = 190;
         let stack = new PIXIVStack({separation: 10});
         stack.addChild(
-            new PIXIButton('Start', buttonWidth, 34, ButtonStyles.SUCCESS)
+            new PIXIButton("Start", buttonWidth, 34, ButtonStyles.SUCCESS)
             .onClick(() => this.handleStartGame()));
         stack.addChild(
-            new PIXIButton('Stop', buttonWidth, 34, ButtonStyles.WARNING)
-            .onClick(() => {console.log('stop'); this.handleStopGame()}));
+            new PIXIButton("Stop", buttonWidth, 34, ButtonStyles.WARNING)
+            .onClick(() => {console.log("stop"); this.handleStopGame(); }));
         stack.addChild(
-            new PIXIButton('Reset', buttonWidth, 34, ButtonStyles.DANGER)
+            new PIXIButton("Reset", buttonWidth, 34, ButtonStyles.DANGER)
             .onClick(() => this.handleResetGame()));
         stack.addChild(
             new PIXIButton(
-                'Shuffle Arrows', buttonWidth, 34, ButtonStyles.SUCCESS)
+                "Shuffle Arrows", buttonWidth, 34, ButtonStyles.SUCCESS)
             .onClick(() => this.handleShuffleArrows()));
 
         let constantMemoryButton = new PIXIButton(
                 this.getAlgorithmButtonLabel(), buttonWidth, 34,
                 ButtonStyles.WARNING)
             .onClick(() => {
-                console.log('click!');
+                console.log("click!");
                 constantMemoryButton.setLabel(this.handleToggleAlgorithm());
-            })
-        stack.addChild(constantMemoryButton)
+            });
+        stack.addChild(constantMemoryButton);
         return stack;
     }
 
@@ -156,7 +155,7 @@ export class World {
         let container = new PIXIVStack({separation: 10});
         container.addChild(this.topBar = this.buildTopBar());
         container.addChild(this.boardContainer = new PIXI.Container());
-        return container
+        return container;
     }
 
     /**
@@ -169,7 +168,7 @@ export class World {
             .setKeyFilter((keyCode: number) => (keyCode >= 48 && keyCode < 58))
             .setKeyCodeConverter((keyCode: number) => String(keyCode - 48))
             .setMaxLength(4);
-        input.on('focus', this.unfocusAllExcept(input));
+        input.on("focus", this.unfocusAllExcept(input));
         return input;
     }
 
@@ -185,14 +184,14 @@ export class World {
         let hstack = new PIXIHStack({separation: 10});
         hstack.addChild(widthInput);
         hstack.addChild(new PIXI.Text(
-            'x', {fontFamily: 'Arial', fontSize: 18, fill: 0xffffff}));
+            "x", {fontFamily: "Arial", fontSize: 18, fill: 0xffffff}));
         hstack.addChild(heightInput);
         hstack.addChild(new PIXIButton(
-            'Change Board Size', 140, 30, ButtonStyles.SUCCESS).onClick(
+            "Change Board Size", 140, 30, ButtonStyles.SUCCESS).onClick(
             () => this.handleBoardResize(
                 widthInput.getText(), heightInput.getText())));
         hstack.addChild(this.statusLabel = new PIXI.Text(
-            'Searching...', {fill: ButtonStyles.WARNING.colors.normal}))
+            "Searching...", {fill: ButtonStyles.WARNING.colors.normal}));
         return hstack;
     }
 
@@ -272,7 +271,7 @@ export class World {
             while (stack.length > 0) {
                 let container = stack.pop();
                 if (container !== control) {
-                    container.emit('unfocus');
+                    container.emit("unfocus");
                     if (container instanceof PIXI.Container) {
                         let children = container.children;
                         for (let i = 0; i < children.length; i++) {
@@ -326,7 +325,7 @@ export class World {
     /** Pauses the game. */
     private handleStopGame() {
         this.paused = true;
-        this.setStatus('Paused');
+        this.setStatus("Paused");
     }
 
     /** Resets the game by spinning the arrows and resetting the checker. */
@@ -345,7 +344,7 @@ export class World {
 
     /** Toggles whether the constant memory algorithm should be used. */
     private handleToggleAlgorithm(): string {
-        console.log('handling...');
+        console.log("handling...");
         this.useConstMemoryAlgorithm = !this.useConstMemoryAlgorithm;
         if (this.checkerController != null) {
             this.checkerController.reset(this.useConstMemoryAlgorithm);
@@ -363,7 +362,7 @@ export class World {
             if (this.checker == null) {
                 this.boardRenderer.updateAll();
                 // Generate a random position.
-                let width = this.board.getWidth()
+                let width = this.board.getWidth();
                 let i = Math.floor(
                     Math.random() * width * this.board.getHeight());
                 let x = i % width;
@@ -372,7 +371,7 @@ export class World {
                 this.checker = new Checker(x, y);
                 this.checkerController = new CheckerController(
                     this.board, this.checker, this.useConstMemoryAlgorithm);
-                this.checkerRenderer = new CheckerRenderer(this.checker)
+                this.checkerRenderer = new CheckerRenderer(this.checker);
                 // Render the checker on the board. This is convenient because
                 // this way the checker will have the same offset as the board.
                 this.boardContainer.addChild(this.checkerRenderer.render(
@@ -381,18 +380,18 @@ export class World {
                 this.checkerController.update();
                 this.checkerRenderer.update();
                 if (this.checkerController.hasDetectedCycle()) {
-                    this.setStatus('Detected cycle');
+                    this.setStatus("Detected cycle");
                 } else if (this.checkerController.hasDetectedEdge()) {
-                    this.setStatus('Detected edge');
+                    this.setStatus("Detected edge");
                 } else {
-                    this.setStatus('Searching...');
+                    this.setStatus("Searching...");
                 }
             }
         } else {
             // TODO: Future work, we could do better here by having
             // ArrowBoardController.update return the updated square
             // coordinates, so we could only update those.
-            this.setStatus('Initializing...');
+            this.setStatus("Initializing...");
             this.boardRenderer.updateAll();
         }
     }

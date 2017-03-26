@@ -1,9 +1,8 @@
 let ButtonState = {
-    HOVER: 'hover',
-    DOWN: 'down',
-    NORMAL: 'normal'
+    HOVER: "hover",
+    DOWN: "down",
+    NORMAL: "normal",
 };
-
 
 /**
  * This class encapsulates the logic for state transitions on a button. It emits
@@ -25,10 +24,10 @@ export class ButtonStateHandler {
 
         this.target.interactive = true;
         this.target.buttonMode = true;
-        this.target.on('pointerdown', () => this.handleMouseDown());
-        this.target.on('pointerup', () => this.handleMouseUp());
-        this.target.on('pointerupoutside', () => this.handleMouseUp());
-        this.target.on('pointermove', (event) => this.handleMouseMove(event));
+        this.target.on("pointerdown", () => this.handleMouseDown());
+        this.target.on("pointerup", () => this.handleMouseUp());
+        this.target.on("pointerupoutside", () => this.handleMouseUp());
+        this.target.on("pointermove", (event) => this.handleMouseMove(event));
     }
 
     /**

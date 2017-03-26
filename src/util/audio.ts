@@ -1,8 +1,7 @@
-import { Howler, Howl } from 'howler';
-
+import { Howl, Howler } from "howler";
 
 export enum Sounds {
-    PLOP, PLOP_QUIET
+    PLOP, PLOP_QUIET,
 }
 
 export class Audio {
@@ -14,8 +13,8 @@ export class Audio {
             Audio.sounds[Sounds.PLOP] = new Howl({
                 // mp3 is public domain, downloaded from
                 // http://soundbible.com/2067-Blop.html
-                src: ['sounds/Blop-Mark_DiAngelo-79054334.mp3'],
-                volume: 0.1
+                src: ["sounds/Blop-Mark_DiAngelo-79054334.mp3"],
+                volume: 0.1,
             });
         }
     }
