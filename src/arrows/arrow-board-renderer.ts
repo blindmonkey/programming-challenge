@@ -16,7 +16,7 @@ export class ArrowBoardRenderer extends BoardRenderer<ArrowSquareType> {
     /**
      * This method contains the logic for rendering an arrow within a square.
      */
-    renderSquare(square: ArrowSquareType, size: number):
+    public renderSquare(square: ArrowSquareType, size: number):
             UpdatableRenderable<ArrowSquareType> {
         let container = new PIXI.Container();
         // A square must return a container and an update function (to modify
@@ -67,8 +67,8 @@ export class ArrowBoardRenderer extends BoardRenderer<ArrowSquareType> {
             graphics.position.y = size / 2;
             // The only control anyone has over the arrows from the model is
             // their rotation amount, so we allow updating that part.
-            update = (square: ArrowSquareType) => (
-                graphics.rotation = Math.PI / 2 * square.angle);
+            update = (newSquare: ArrowSquareType) => (
+                graphics.rotation = Math.PI / 2 * newSquare.angle);
             // Do the initial rotation assignment to match current square data.
             update(square);
         }

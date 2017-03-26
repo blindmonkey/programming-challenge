@@ -23,14 +23,14 @@ export class PIXIRect extends PIXI.Graphics {
 
     constructor(width: number, height: number,
                 options: {cornerRadius?: number, fillColor?: number,
-                          strokeColor?: number, lineWidth?: number} = null) {
+                          lineWidth?: number, strokeColor?: number} = null) {
         super();
         this.options = {
             cornerRadius: options && (
                 options.cornerRadius == null ? 5 : options.cornerRadius),
             fillColor: options && options.fillColor || 0,
-            strokeColor: options && options.strokeColor,
             lineWidth: options && options.lineWidth || 0,
+            strokeColor: options && options.strokeColor,
             width,
             height,
         };
@@ -40,7 +40,7 @@ export class PIXIRect extends PIXI.Graphics {
     /**
      * Set new parameters for the fill and stroke colors.
      */
-    setColors(colors: {fill?: number, stroke?: number}) {
+    public setColors(colors: {fill?: number, stroke?: number}) {
         if (colors.fill != null) {
             this.options.fillColor = colors.fill;
         }

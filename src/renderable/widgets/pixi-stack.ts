@@ -30,7 +30,7 @@ export class PIXIHStack extends PIXIStack {
         super(options);
     }
 
-    addChild(child: PIXI.Container) {
+    public addChild(child: PIXI.Container) {
         let lastChild = this.children.length > 0 ?
             this.children.slice(-1)[0] : null;
         let lastChildRect = lastChild == null ? null : lastChild.getBounds();
@@ -51,7 +51,7 @@ export class PIXIVStack extends PIXIStack {
         super(options);
     }
 
-    addChild(child: PIXI.Container) {
+    public addChild(child: PIXI.Container) {
         let lastChild = this.children.length > 0 ?
             this.children.slice(-1)[0] : null;
         let lastChildRect = lastChild == null ? null : lastChild.getBounds();

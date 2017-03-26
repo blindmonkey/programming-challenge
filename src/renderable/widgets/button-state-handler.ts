@@ -1,6 +1,6 @@
 let ButtonState = {
-    HOVER: "hover",
     DOWN: "down",
+    HOVER: "hover",
     NORMAL: "normal",
 };
 
@@ -28,6 +28,21 @@ export class ButtonStateHandler {
         this.target.on("pointerup", () => this.handleMouseUp());
         this.target.on("pointerupoutside", () => this.handleMouseUp());
         this.target.on("pointermove", (event) => this.handleMouseMove(event));
+    }
+
+    /** Registers a hover handler. */
+    public whenHovered(handler: () => void) {
+        return this.listen(ButtonState.HOVER, handler);
+    }
+
+    /** Registers a button down handler. */
+    public whenDown(handler: () => void) {
+        return this.listen(ButtonState.DOWN, handler);
+    }
+
+    /** Registers a button normal handler. */
+    public whenNormal(handler: () => void) {
+        return this.listen(ButtonState.NORMAL, handler);
     }
 
     /**
@@ -90,24 +105,9 @@ export class ButtonStateHandler {
     private fire(event: string) {
         let handlers = this.handlers[event];
         if (handlers != null) {
-            for (let i = 0; i < handlers.length; i++) {
-                handlers[i]();
+            for (let handler of handlers) {
+                handler();
             }
         }
-    }
-
-    /** Registers a hover handler. */
-    whenHovered(handler: () => void) {
-        return this.listen(ButtonState.HOVER, handler);
-    }
-
-    /** Registers a button down handler. */
-    whenDown(handler: () => void) {
-        return this.listen(ButtonState.DOWN, handler);
-    }
-
-    /** Registers a button normal handler. */
-    whenNormal(handler: () => void) {
-        return this.listen(ButtonState.NORMAL, handler);
     }
 }

@@ -18,6 +18,43 @@ export class Board<T> {
         this.board = this.initializeBoardArray(width, height, initializer);
     }
 
+    /** Returns the width of the board. */
+    public getWidth()  { return this.width; }
+    /** Returns the height of the board. */
+    public getHeight() { return this.height; }
+
+    /**
+     * Iterates over all coordinates, calls the given function, and updates the
+     * board with the result.
+     * TODO: Could be extended to optionally return a new board.
+     */
+    public map(f: (value: T, x: number, y: number) => T): Board<T> {
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                let oldValue: T = this.get(x, y);
+                let newValue: T = f(oldValue, x, y);
+                this.put(newValue, x, y);
+            }
+        }
+        return this;
+    }
+
+    /** Puts a value into the square at the given coordinate. */
+    public put(value: T, x: number, y: number) {
+        let index = CoordUtils.coordToIndex(x, y, this.width, this.height);
+        this.board[index] = value;
+    }
+
+    /** Gets the square at the given coordinate. */
+    public get(x: number, y: number) {
+        let index = CoordUtils.coordToIndex(
+            x, y, this.width, this.height, false);
+        if (index == null) {
+            return null;
+        }
+        return this.board[index];
+    }
+
     /**
      * Initializes an array that can internally be used for a board. Optionally
      * takes an initializer. If one is not specified, all squares are
@@ -33,40 +70,5 @@ export class Board<T> {
             }
         }
         return boardArray;
-    }
-
-    /** Returns the width of the board. */
-    getWidth()  { return this.width; }
-    /** Returns the height of the board. */
-    getHeight() { return this.height; }
-
-    /**
-     * Iterates over all coordinates, calls the given function, and updates the
-     * board with the result.
-     * TODO: Could be extended to optionally return a new board.
-     */
-    map(f: (value: T, x: number, y: number) => T): Board<T> {
-        for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
-                let oldValue: T = this.get(x, y);
-                let newValue: T = f(oldValue, x, y);
-                this.put(newValue, x, y);
-            }
-        }
-        return this;
-    }
-
-    /** Puts a value into the square at the given coordinate. */
-    put(value: T, x: number, y: number) {
-        let index = CoordUtils.coordToIndex(x, y, this.width, this.height);
-        this.board[index] = value;
-    }
-
-    /** Gets the square at the given coordinate. */
-    get(x: number, y: number) {
-        let index = CoordUtils.coordToIndex(
-            x, y, this.width, this.height, false);
-        if (index == null) return null;
-        return this.board[index];
     }
 }

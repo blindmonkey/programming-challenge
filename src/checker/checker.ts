@@ -18,29 +18,29 @@ export class Checker {
     }
 
     /** Returns the position of this checker. */
-    getPosition() { return {x: this.x, y: this.y}; }
+    public getPosition() { return {x: this.x, y: this.y}; }
 
     /** Sets the position of this `Checker` on a `Board`. */
-    setPosition(x: number, y: number) {
+    public setPosition(x: number, y: number) {
         this.x = x | 0;
         this.y = y | 0;
         return this;
     }
 
     /** Returns the floating point offset of this `Checker`. */
-    getOffset(): {x: number, y: number} {
+    public getOffset(): {x: number, y: number} {
         return {x: this.offset.x, y: this.offset.y};
     }
 
     /** Sets the floating point offset of this `Checker`. */
-    setOffset(dx: number, dy: number) {
+    public setOffset(dx: number, dy: number) {
         this.offset.x = dx;
         this.offset.y = dy;
         return this;
     }
 
     /** Returns the sum of the position and the offset. */
-    getOffsetPosition(): {x: number, y: number} {
+    public getOffsetPosition(): {x: number, y: number} {
         return {x: this.x + this.offset.x,
                 y: this.y + this.offset.y};
     }

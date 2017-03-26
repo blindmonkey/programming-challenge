@@ -31,25 +31,19 @@ export abstract class BoardRenderer<T> {
         this.clickHandlers = [];
     }
 
-    /**
-     * Render a given square and returns an UpdatableRenderer.
-     */
-    protected abstract renderSquare(square: T, squareSize: number):
-        UpdatableRenderable<T>;
+    /** Returns the size of a single square. */
+    public getSquareSize() { return this.squareSize; }
 
     /** Registers a click event. */
-    onClick(handler: (x: number, y: number) => void) {
+    public onClick(handler: (x: number, y: number) => void) {
         this.clickHandlers.push(handler);
     }
-
-    /** Returns the size of a single square. */
-    getSquareSize() { return this.squareSize; }
 
     /**
      * Updates the rendered graphic of a single square and returns the top-level
      * container.
      */
-    update(x: number, y: number): PIXI.Container {
+    public update(x: number, y: number): PIXI.Container {
         let squareSize = this.squareSize;
         let index = CoordUtils.coordToIndex(
             x, y, this.board.getWidth(), this.board.getHeight());
@@ -60,8 +54,8 @@ export abstract class BoardRenderer<T> {
             let squareContainer = new PIXI.Container();
             // Render a black or white square.
             let squareRect = new PIXIRect(squareSize, squareSize, {
-                fillColor: x % 2 === y % 2 ? 0x000000 : 0xffffff,
-                cornerRadius: 0});
+                cornerRadius: 0,
+                fillColor: x % 2 === y % 2 ? 0x000000 : 0xffffff});
             squareContainer.addChild(squareRect);
 
             // Render the actual square graphic.
@@ -81,8 +75,8 @@ export abstract class BoardRenderer<T> {
             // Register for click events.
             squareContainer.interactive = true;
             squareContainer.on("pointerdown", () => {
-                for (let i = 0; i < this.clickHandlers.length; i++) {
-                    this.clickHandlers[i](x, y);
+                for (let handler of this.clickHandlers) {
+                    handler(x, y);
                 }
             });
             cached = {
@@ -98,7 +92,7 @@ export abstract class BoardRenderer<T> {
     }
 
     /** Updates all the squares on the board. */
-    updateAll() {
+    public updateAll() {
         this.renderedChildren = this.renderedChildren || [];
         for (let y = 0; y < this.board.getHeight(); y++) {
             for (let x = 0; x < this.board.getWidth(); x++) {
@@ -111,7 +105,7 @@ export abstract class BoardRenderer<T> {
      * Clears all render cache, causing the next render call to return a fresh
      * new container.
      */
-    clearRendered() {
+    public clearRendered() {
         this.rendered = null;
         this.renderedChildren = [];
         this.squareSize = null;
@@ -120,13 +114,13 @@ export abstract class BoardRenderer<T> {
     /**
      * Renders the board into a view of the given size.
      */
-    render(viewWidth: number, viewHeight: number): PIXI.Container {
+    public render(viewWidth: number, viewHeight: number): PIXI.Container {
         if (this.rendered == null) {
             let board = this.board;
             let container = new PIXI.Container();
             this.rendered = container;
-            let boardWidth = board.getWidth(),
-                boardHeight = board.getHeight();
+            let boardWidth = board.getWidth();
+            let boardHeight = board.getHeight();
             let squareSize = Math.floor(Math.min(viewWidth / boardWidth,
                                                  viewHeight / boardHeight));
             this.squareSize = squareSize;
@@ -134,8 +128,8 @@ export abstract class BoardRenderer<T> {
             for (let y = 0; y < boardHeight; y++) {
                 for (let x = 0; x < boardWidth; x++) {
                     let squareContainer = this.update(x, y);
-                    let screenX = x * squareSize,
-                        screenY = y * squareSize;
+                    let screenX = x * squareSize;
+                    let screenY = y * squareSize;
                     squareContainer.position.x = screenX;
                     squareContainer.position.y = screenY;
                     container.addChild(squareContainer);
@@ -144,4 +138,10 @@ export abstract class BoardRenderer<T> {
         }
         return this.rendered;
     }
+
+    /**
+     * Render a given square and returns an UpdatableRenderer.
+     */
+    protected abstract renderSquare(square: T, squareSize: number):
+        UpdatableRenderable<T>;
 };

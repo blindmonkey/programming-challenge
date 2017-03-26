@@ -70,13 +70,15 @@ export class PIXITextInput extends PIXI.Container {
         this.cursor = 0;
 
         let backgroundColor = style && style.color;
-        if (backgroundColor == null) backgroundColor = 0xFFFFFF;
+        if (backgroundColor == null) {
+            backgroundColor = 0xFFFFFF;
+        }
 
         // Initialize the graphic objects.
         this.outline = new PIXIRect(width, height, {
             cornerRadius, fillColor: backgroundColor,
-            strokeColor: style && style.border && style.border.color || 0,
-            lineWidth: style && style.border && style.border.width || 0});
+            lineWidth: style && style.border && style.border.width || 0,
+            strokeColor: style && style.border && style.border.color || 0});
         this.addChild(this.outline);
 
         this.measureTextObject = new PIXI.Text("", style.text);
@@ -92,25 +94,48 @@ export class PIXITextInput extends PIXI.Container {
 
         // Initialize the interactivity logic.
         this.interactive = true;
-        this.on("pointerdown", function() {
+        this.on("pointerdown", () => {
             // Focus on this text input.
             this.focused = true;
             this.cursorObject.alpha = 1;
             this.emit("focus");
-        }.bind(this));
+        });
 
-        this.on("unfocus", function() {
+        this.on("unfocus", () => {
             // If something emits an unfocus event on this text input, it should
             // react.
             this.focused = false;
             this.cursorObject.alpha = 0;
         });
 
-        document.addEventListener("keydown", function(e) {
+        document.addEventListener("keydown", (e) => {
             // Ignore keys when not focused.
-            if (!this.focused) return;
+            if (!this.focused) {
+                return;
+            }
             this.handleKeyDown(e.keyCode);
-        }.bind(this));
+        });
+    }
+
+    /** Gets the value of the currently entered text. */
+    public getText() { return this.text; }
+
+    /** Sets the keycode converter. */
+    public setKeyCodeConverter(converter: (keyCode: number) => string) {
+        this.keyCodeToChar = converter;
+        return this;
+    }
+
+    /** Sets the max length. */
+    public setMaxLength(maxLength: number) {
+        this.maxLength = maxLength;
+        return this;
+    }
+
+    /** Sets the key filter. */
+    public setKeyFilter(filter: (keyCode: number) => boolean) {
+        this.keyFilter = filter;
+        return this;
     }
 
     private buildTextCursor(): PIXI.Graphics {
@@ -177,34 +202,17 @@ export class PIXITextInput extends PIXI.Container {
      * this.text.length (inclusive).
      */
     private moveCursor(newPosition: number) {
-        if (newPosition < 0) newPosition = 0;
-        if (newPosition > this.text.length) newPosition = this.text.length;
+        if (newPosition < 0) {
+            newPosition = 0;
+        }
+        if (newPosition > this.text.length) {
+            newPosition = this.text.length;
+        }
 
         let textPart = this.text.slice(0, newPosition);
         this.cursor = newPosition;
         let measuredWidth = textPart.length > 0 ?
             this.measureText(textPart).width : 0;
         this.cursorObject.position.x = measuredWidth + this.padding;
-    }
-
-    /** Gets the value of the currently entered text. */
-    getText() { return this.text; }
-
-    /** Sets the keycode converter. */
-    setKeyCodeConverter(converter: (keyCode: number) => string) {
-        this.keyCodeToChar = converter;
-        return this;
-    }
-
-    /** Sets the max length. */
-    setMaxLength(maxLength: number) {
-        this.maxLength = maxLength;
-        return this;
-    }
-
-    /** Sets the key filter. */
-    setKeyFilter(filter: (keyCode: number) => boolean) {
-        this.keyFilter = filter;
-        return this;
     }
 }

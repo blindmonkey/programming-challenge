@@ -38,19 +38,19 @@ export class CheckerController {
     /**
      * Returns true if it has been identified that this checker is in a cycle.
      */
-    hasDetectedCycle() { return this.detectedCycle; }
+    public hasDetectedCycle() { return this.detectedCycle; }
 
     /**
      * Returns true if the next move would move the checker off the edge of the
      * board.
      */
-    hasDetectedEdge() { return this.detectedOffEdge; }
+    public hasDetectedEdge() { return this.detectedOffEdge; }
 
     /**
      * Resets the cycle/edge tracking, as well as the algorithm that should be
      * used
      */
-    reset(constantMemory: boolean = false) {
+    public reset(constantMemory: boolean = false) {
         this.constantMemory = constantMemory;
         this.detectedCycle = false;
         this.detectedOffEdge = false;
@@ -59,13 +59,28 @@ export class CheckerController {
     }
 
     /**
+     * Animates the checker and schedules the next move.
+     */
+    public update() {
+        if (this.animateTowardsPosition()) {
+            let position = this.checker.getPosition();
+            // When the checker has stopped, move it to the next square.
+            let squareDirection = this.getDirectionOfBoardSquare(
+                position.x, position.y);
+            if (squareDirection != null) {
+                this.move(squareDirection.dx, squareDirection.dy);
+            }
+        }
+    }
+
+    /**
      * Given a position offset, sets up the checker so that it will animate to
      * the square in that direction.
      */
     private move(dx: number, dy: number) {
         let position = this.checker.getPosition();
-        let nx = position.x + dx,
-            ny = position.y + dy;
+        let nx = position.x + dx;
+        let ny = position.y + dy;
         if (!this.constantMemory) {
             // The non-constant memory algorithm. Keeps a hashmap of visited
             // positions and checks whether the next position was visited.
@@ -154,27 +169,13 @@ export class CheckerController {
         let square: ArrowSquareType = this.board.get(x, y);
         if (square != null) {
             let angle = Math.round(square.angle) % 4;
-            if (angle < 0) angle += 4;
-            let movements = [{x: 1}, {y: 1}, {x: -1}, {y: -1}];
-            let movement = movements[angle];
-            return {dx: movement["x"] || 0,
-                    dy: movement["y"] || 0};
+            if (angle < 0) {
+                angle += 4;
+            }
+            let movements = [{dx: 1, dy: 0}, {dx: 0, dy: 1},
+                             {dx: -1, dy: 0}, {dx: 0, dy: -1}];
+            return movements[angle];
         }
         return null;
-    }
-
-    /**
-     * Animates the checker and schedules the next move.
-     */
-    update() {
-        if (this.animateTowardsPosition()) {
-            let position = this.checker.getPosition();
-            // When the checker has stopped, move it to the next square.
-            let squareDirection = this.getDirectionOfBoardSquare(
-                position.x, position.y);
-            if (squareDirection != null) {
-                this.move(squareDirection.dx, squareDirection.dy);
-            }
-        }
     }
 }

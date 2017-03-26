@@ -5,9 +5,7 @@ export enum Sounds {
 }
 
 export class Audio {
-    private static sounds: {[key: string]: Howl};
-
-    static initialize() {
+    public static initialize() {
         if (Audio.sounds == null) {
             Audio.sounds = {};
             Audio.sounds[Sounds.PLOP] = new Howl({
@@ -19,7 +17,7 @@ export class Audio {
         }
     }
 
-    static play(sound: Sounds) {
+    public static play(sound: Sounds) {
         Audio.initialize();
         let howl = Audio.sounds[sound];
         if (howl != null) {
@@ -28,6 +26,8 @@ export class Audio {
         }
         return false;
     }
+
+    private static sounds: {[key: string]: Howl};
 }
 
 Audio.initialize();

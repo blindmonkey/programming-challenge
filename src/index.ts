@@ -5,12 +5,12 @@ import { World } from "./world";
 // Create the world
 let world = new World();
 
-let startLoop = function(f) {
-    requestAnimationFrame(function() { startLoop(f); });
+function startLoop(f) {
+    requestAnimationFrame(() => startLoop(f));
     f();
 };
 
-startLoop(function() {
+startLoop(() => {
     world.update();
     world.render();
 });

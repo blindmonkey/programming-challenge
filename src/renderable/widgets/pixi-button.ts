@@ -21,11 +21,12 @@ export type PIXIButtonStyle = {
     },
 };
 
-let accessOrDefault = function(
-        obj: Object, path: string[], defaultValue?: any) {
-    for (let i = 0; i < path.length; i++) {
-        obj = obj[path[i]];
-        if (obj == null) return defaultValue;
+function accessOrDefault(obj: Object, path: string[], defaultValue?: any) {
+    for (let component of path) {
+        obj = obj[component];
+        if (obj == null) {
+            return defaultValue;
+        }
     }
     return obj;
 };
@@ -74,8 +75,8 @@ export class PIXIButton extends PIXI.Container {
 
         this.outline = new PIXIRect(width, height, {
             cornerRadius, fillColor: normalFillColor,
-            strokeColor: normalBorderColor,
-            lineWidth: style && style.border && style.border.width || 0});
+            lineWidth: style && style.border && style.border.width || 0,
+            strokeColor: normalBorderColor});
         this.addChild(this.outline);
 
         this.text = this.renderText();
@@ -90,6 +91,25 @@ export class PIXIButton extends PIXI.Container {
                 fill: downFillColor, stroke: downBorderColor})).bind(this));
     }
 
+    /**
+     * Sets the label of the button. This automatically refreshes the view. Keep
+     * in mind that the text will not be wrapped.
+     */
+    public setLabel(newText: string): PIXIButton {
+        this.text = this.renderText(newText);
+        return this;
+    }
+
+    /**
+     * Register a handler for a click event. Equivalent to
+     * `button.on('click', ...)`, but more convenient because it returns the
+     * button.
+     */
+    public onClick(handler: () => void): PIXIButton {
+        this.on("click", handler);
+        return this;
+    }
+
     /** Renders and positions the text label of the button. */
     private renderText(label?: string): PIXI.Text {
         label = label != null ? label : this.label;
@@ -101,24 +121,5 @@ export class PIXIButton extends PIXI.Container {
         text.position.x = Math.floor(this.buttonWidth / 2 - text.width / 2);
         text.position.y = Math.floor(this.buttonHeight / 2 - text.height / 2);
         return text;
-    }
-
-    /**
-     * Sets the label of the button. This automatically refreshes the view. Keep
-     * in mind that the text will not be wrapped.
-     */
-    setLabel(newText: string): PIXIButton {
-        this.text = this.renderText(newText);
-        return this;
-    }
-
-    /**
-     * Register a handler for a click event. Equivalent to
-     * `button.on('click', ...)`, but more convenient because it returns the
-     * button.
-     */
-    onClick(handler: () => void): PIXIButton {
-        this.on("click", handler);
-        return this;
     }
 }

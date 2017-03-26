@@ -73,6 +73,97 @@ export class World {
     }
 
     /**
+     * Removes the checker, if there is one, and reinstantiates all the classes
+     * associated with the board.
+     */
+    public createNewBoard() {
+        // If a checker exists, remove its rendered element and reset all
+        // checker-related properties.
+        if (this.checker != null) {
+            let renderedChecker = this.checkerRenderer.getRendered();
+            if (renderedChecker != null) {
+                this.boardContainer.removeChild(renderedChecker);
+            }
+            this.checker = null;
+            this.checkerController = null;
+            this.checkerRenderer = null;
+        }
+
+        // Reset the board.
+        this.board = new Board<ArrowSquareType>(
+            this.boardWidth, this.boardHeight, this.arrowSquareInitializer);
+        this.boardController = new ArrowBoardController(this.board);
+        this.boardRenderer = new ArrowBoardRenderer(this.board);
+        // Attach the new click handler, since we have a new renderer instance.
+        this.boardRenderer.onClick((x: number, y: number) => {
+            let square = this.board.get(x, y);
+            if (square.angle === Math.round(square.angle)) {
+                square.angle = (square.angle + 1) % 4;
+            }
+            this.board.put(square, x, y);
+            this.boardRenderer.update(x, y);
+            if (this.checkerController != null) {
+                this.checkerController.reset(this.useConstMemoryAlgorithm);
+            }
+        });
+        // This will clear the board container and render the board into the
+        // renderer viewport.
+        this.rerenderBoard();
+        // Spin the arrows for effect.
+        this.boardController.initiateRotation();
+    }
+
+    /** Updates the world. */
+    public update() {
+        if (this.paused) {
+            return;
+        }
+        if (!this.boardController.update()) {
+            // If are in this block, that means all arrows are done spinning.
+            // In this case, we might either have to create a random checker or
+            // update the existing one.
+            if (this.checker == null) {
+                this.boardRenderer.updateAll();
+                // Generate a random position.
+                let width = this.board.getWidth();
+                let i = Math.floor(
+                    Math.random() * width * this.board.getHeight());
+                let x = i % width;
+                let y = (i - x) / width;
+                // Create our checker and associated objects.
+                this.checker = new Checker(x, y);
+                this.checkerController = new CheckerController(
+                    this.board, this.checker, this.useConstMemoryAlgorithm);
+                this.checkerRenderer = new CheckerRenderer(this.checker);
+                // Render the checker on the board. This is convenient because
+                // this way the checker will have the same offset as the board.
+                this.boardContainer.addChild(this.checkerRenderer.render(
+                    this.boardRenderer.getSquareSize()));
+            } else {
+                this.checkerController.update();
+                this.checkerRenderer.update();
+                if (this.checkerController.hasDetectedCycle()) {
+                    this.setStatus("Detected cycle");
+                } else if (this.checkerController.hasDetectedEdge()) {
+                    this.setStatus("Detected edge");
+                } else {
+                    this.setStatus("Searching...");
+                }
+            }
+        } else {
+            // TODO: Future work, we could do better here by having
+            // ArrowBoardController.update return the updated square
+            // coordinates, so we could only update those.
+            this.setStatus("Initializing...");
+            this.boardRenderer.updateAll();
+        }
+    }
+
+    public render() {
+        this.renderer.render(this.stage);
+    }
+
+    /**
      * A small helper function that allows us to easily initialize an arrow
      * board where all the arrows are pointing in a random direction.
      */
@@ -128,7 +219,7 @@ export class World {
             .onClick(() => this.handleStartGame()));
         stack.addChild(
             new PIXIButton("Stop", buttonWidth, 34, ButtonStyles.WARNING)
-            .onClick(() => {console.log("stop"); this.handleStopGame(); }));
+            .onClick(() => this.handleStopGame()));
         stack.addChild(
             new PIXIButton("Reset", buttonWidth, 34, ButtonStyles.DANGER)
             .onClick(() => this.handleResetGame()));
@@ -140,10 +231,8 @@ export class World {
         let constantMemoryButton = new PIXIButton(
                 this.getAlgorithmButtonLabel(), buttonWidth, 34,
                 ButtonStyles.WARNING)
-            .onClick(() => {
-                console.log("click!");
-                constantMemoryButton.setLabel(this.handleToggleAlgorithm());
-            });
+            .onClick(() =>
+                constantMemoryButton.setLabel(this.handleToggleAlgorithm()));
         stack.addChild(constantMemoryButton);
         return stack;
     }
@@ -161,10 +250,10 @@ export class World {
     /**
      * A helper method that sets up a text input for number entry.
      */
-    private setupSizeInput(initialValue: string) : PIXITextInput {
+    private setupSizeInput(initialValue: string): PIXITextInput {
         let input = new PIXITextInput(initialValue, 65, 30, {
-                text: {fontSize: 15}, color: 0xFFFFFF,
-                border: {width: 1, color: 0x888888}})
+                border: {color: 0x888888, width: 1}, color: 0xFFFFFF,
+                text: {fontSize: 15}})
             .setKeyFilter((keyCode: number) => (keyCode >= 48 && keyCode < 58))
             .setKeyCodeConverter((keyCode: number) => String(keyCode - 48))
             .setMaxLength(4);
@@ -203,47 +292,6 @@ export class World {
     }
 
     /**
-     * Removes the checker, if there is one, and reinstantiates all the classes
-     * associated with the board.
-     */
-    createNewBoard() {
-        // If a checker exists, remove its rendered element and reset all
-        // checker-related properties.
-        if (this.checker != null) {
-            let renderedChecker = this.checkerRenderer.getRendered();
-            if (renderedChecker != null) {
-                this.boardContainer.removeChild(renderedChecker);
-            }
-            this.checker = null;
-            this.checkerController = null;
-            this.checkerRenderer = null;
-        }
-
-        // Reset the board.
-        this.board = new Board<ArrowSquareType>(
-            this.boardWidth, this.boardHeight, this.arrowSquareInitializer);
-        this.boardController = new ArrowBoardController(this.board);
-        this.boardRenderer = new ArrowBoardRenderer(this.board);
-        // Attach the new click handler, since we have a new renderer instance.
-        this.boardRenderer.onClick((x: number, y: number) => {
-            let square = this.board.get(x, y);
-            if (square.angle === Math.round(square.angle)) {
-                square.angle = (square.angle + 1) % 4;
-            }
-            this.board.put(square, x, y);
-            this.boardRenderer.update(x, y);
-            if (this.checkerController != null) {
-                this.checkerController.reset(this.useConstMemoryAlgorithm);
-            }
-        });
-        // This will clear the board container and render the board into the
-        // renderer viewport.
-        this.rerenderBoard();
-        // Spin the arrows for effect.
-        this.boardController.initiateRotation();
-    }
-
-    /**
      * Clears the board container and attaches a newly rendered board.
      */
     private rerenderBoard() {
@@ -273,9 +321,8 @@ export class World {
                 if (container !== control) {
                     container.emit("unfocus");
                     if (container instanceof PIXI.Container) {
-                        let children = container.children;
-                        for (let i = 0; i < children.length; i++) {
-                            stack.push(children[i]);
+                        for (let child of container.children) {
+                            stack.push(child);
                         }
                     }
                 }
@@ -344,59 +391,10 @@ export class World {
 
     /** Toggles whether the constant memory algorithm should be used. */
     private handleToggleAlgorithm(): string {
-        console.log("handling...");
         this.useConstMemoryAlgorithm = !this.useConstMemoryAlgorithm;
         if (this.checkerController != null) {
             this.checkerController.reset(this.useConstMemoryAlgorithm);
         }
         return this.getAlgorithmButtonLabel();
-    }
-
-    /** Updates the world. */
-    update() {
-        if (this.paused) return;
-        if (!this.boardController.update()) {
-            // If are in this block, that means all arrows are done spinning.
-            // In this case, we might either have to create a random checker or
-            // update the existing one.
-            if (this.checker == null) {
-                this.boardRenderer.updateAll();
-                // Generate a random position.
-                let width = this.board.getWidth();
-                let i = Math.floor(
-                    Math.random() * width * this.board.getHeight());
-                let x = i % width;
-                let y = (i - x) / width;
-                // Create our checker and associated objects.
-                this.checker = new Checker(x, y);
-                this.checkerController = new CheckerController(
-                    this.board, this.checker, this.useConstMemoryAlgorithm);
-                this.checkerRenderer = new CheckerRenderer(this.checker);
-                // Render the checker on the board. This is convenient because
-                // this way the checker will have the same offset as the board.
-                this.boardContainer.addChild(this.checkerRenderer.render(
-                    this.boardRenderer.getSquareSize()));
-            } else {
-                this.checkerController.update();
-                this.checkerRenderer.update();
-                if (this.checkerController.hasDetectedCycle()) {
-                    this.setStatus("Detected cycle");
-                } else if (this.checkerController.hasDetectedEdge()) {
-                    this.setStatus("Detected edge");
-                } else {
-                    this.setStatus("Searching...");
-                }
-            }
-        } else {
-            // TODO: Future work, we could do better here by having
-            // ArrowBoardController.update return the updated square
-            // coordinates, so we could only update those.
-            this.setStatus("Initializing...");
-            this.boardRenderer.updateAll();
-        }
-    }
-
-    render() {
-        this.renderer.render(this.stage);
     }
 }

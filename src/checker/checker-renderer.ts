@@ -19,7 +19,7 @@ export class CheckerRenderer {
     }
 
     /** Sets the square size of the board this checker is on. */
-    setSquareSize(newSquareSize: number) {
+    public setSquareSize(newSquareSize: number) {
         this.squareSize = newSquareSize;
         this.rerender();
     }
@@ -28,7 +28,33 @@ export class CheckerRenderer {
      * If this renderer has rendered the checker, this will return the top-level
      * PIXI container that has it. Otherwise, it will return null.
      */
-    getRendered(): PIXI.Container { return this.rendered; }
+    public getRendered(): PIXI.Container { return this.rendered; }
+
+    /**
+     * Updates the position of the graphics based on the updated `Checker`
+     * position.
+     */
+    public update() {
+        if (this.rendered != null) {
+            let position = this.checker.getOffsetPosition();
+            this.rendered.position.x = this.squareSize * position.x;
+            this.rendered.position.y = this.squareSize * position.y;
+        }
+    }
+
+    /**
+     * Given a square size, renders the checker and returns an element that
+     * contains it.
+     */
+    public render(squareSize: number): PIXI.Container {
+        if (this.rendered == null) {
+            this.squareSize = squareSize;
+            this.rendered = new PIXI.Container();
+            this.rendered.addChild(this.buildGraphics());
+            this.update();
+        }
+        return this.rendered;
+    }
 
     /**
      * Builds the path used to represent the checker and positions it in the
@@ -60,31 +86,5 @@ export class CheckerRenderer {
     private rerender() {
         this.rendered.removeChildren();
         this.rendered.addChild(this.buildGraphics());
-    }
-
-    /**
-     * Updates the position of the graphics based on the updated `Checker`
-     * position.
-     */
-    update() {
-        if (this.rendered != null) {
-            let position = this.checker.getOffsetPosition();
-            this.rendered.position.x = this.squareSize * position.x;
-            this.rendered.position.y = this.squareSize * position.y;
-        }
-    }
-
-    /**
-     * Given a square size, renders the checker and returns an element that
-     * contains it.
-     */
-    render(squareSize: number): PIXI.Container {
-        if (this.rendered == null) {
-            this.squareSize = squareSize;
-            this.rendered = new PIXI.Container();
-            this.rendered.addChild(this.buildGraphics());
-            this.update();
-        }
-        return this.rendered;
     }
 }
