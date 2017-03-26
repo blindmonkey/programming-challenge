@@ -10,7 +10,7 @@
  * To convert to degrees, multiply by 90°.
  *
  * The format for angle was chosen purely for its convenient ability to
- * simultaneously represent discrete directions.
+ * simultaneously represent discrete directions as well as continuous ones.
  */
 export type ArrowSquareType = {
     angle: number,
