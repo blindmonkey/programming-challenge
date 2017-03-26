@@ -15,24 +15,28 @@
     "start": "npm run watch",
     "clean": "cross-conf-env rimraf npm_package_config_bundle",
     "build": "cross-conf-env browserify -s npm_package_name npm_package_config_app -o npm_package_config_bundle -p [tsify --target='es6'] -t [preprocessify --contextFile build/debug.json] --no-bundle-external --debug",
-    "watch": "cross-conf-env watchify  -s npm_package_name npm_package_config_app -o npm_package_config_bundle -p [tsify --target='es6'] -t [preprocessify --contextFile build/debug.json] --no-bundle-external --debug -dv"
+    "watch": "cross-conf-env watchify  -s npm_package_name npm_package_config_app -o npm_package_config_bundle -p [tsify --target='es6'] -t [preprocessify --contextFile build/debug.json] --no-bundle-external --debug -dv",
+    "test": "npm run build && ./node_modules/jasmine/bin/jasmine.js"
   },
   "browserify": {
     "transform": []
   },
   "devDependencies": {
     "cross-conf-env": "^1.0.0",
-    "tsify": "^1.0.0",
-    "typescript": "^1.8.10",
+    "jasmine": "^2.5.3",
+    "karma-chrome-launcher": "^2.0.0",
+    "mapstraction": "^1.0.0",
     "parallelshell": "^2.0.0",
     "preprocessify": "^1.0.0",
-    "mapstraction": "^1.0.0",
     "rimraf": "^1.0.9",
+    "tsify": "^1.0.0",
+    "typescript": "^1.8.10",
     "watch": "^1.0.2",
     "watchify": "^3.0.0"
   },
   "dependencies": {
     "electron-prebuilt": "^1.4.1",
+    "howler": "^2.0.3",
     "pixi.js": "^4.3.3"
   }
 }
